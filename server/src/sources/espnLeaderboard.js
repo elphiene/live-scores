@@ -87,21 +87,21 @@ export function createEspnLeaderboardEdition(opts) {
     return Math.max(1, Math.min(played, roundCount))
   }
 
-  function toRow(comp, round, prevPositions) {
+  function toRow(comp, round) {
     const linescores = comp.linescores ?? []
     const roundEntry = linescores.find(ls => ls.period === round)
     const scoreValue = parseToPar(comp.score)
     const finishedRounds = linescores.filter(ls => ls.value != null).length
 
-    const prevPos = prevPositions.get(String(comp.id))
-    const movement = prevPos != null ? prevPos - comp.order : null
-
     return {
       id: String(comp.id),
+      // position/posLabel are placeholders here — assignRanking() below
+      // overwrites both with the real competition-ranking rank once every
+      // row's `status` is known (ties only make sense among still-active
+      // players, so ranking has to happen after this pass, not during it).
       position: comp.order ?? null,
-      // TODO(v2): proper tie handling ('T4') — v1 shows a plain rank.
       posLabel: String(comp.order ?? '—'),
-      movement,
+      movement: null,
       name: comp.athlete?.displayName ?? 'TBD',
       flag: comp.athlete?.flag?.href ?? null,
       subtitle: null,
@@ -120,6 +120,40 @@ export function createEspnLeaderboardEdition(opts) {
     }
   }
 
+  // Standard golf "competition ranking": equal scores share one rank (shown
+  // as 'T4'), the next distinct score jumps past the tied count (…T4, T4, 6).
+  // Restricted to 'active' rows — a cut player's scoreValue reflects fewer
+  // rounds played, so a numeric match with an active player isn't a real
+  // tie; cut rows just get plain sequential ranks continuing the count.
+  function assignRanking(rows) {
+    let rank = 1, i = 0
+    while (i < rows.length && rows[i].status === 'active') {
+      let j = i
+      while (j < rows.length && rows[j].status === 'active' && rows[j].scoreValue === rows[i].scoreValue) j++
+      const tieCount = j - i
+      const label = tieCount > 1 ? `T${rank}` : `${rank}`
+      for (let k = i; k < j; k++) { rows[k].position = rank; rows[k].posLabel = label }
+      rank += tieCount
+      i = j
+    }
+    for (; i < rows.length; i++, rank++) {
+      rows[i].position = rank
+      rows[i].posLabel = String(rank)
+    }
+    return rows
+  }
+
+  // Movement compares this poll's ranking-based position against the
+  // previous poll's — both computed the same way, so this stays consistent
+  // across polls (see cache.js's peekCached).
+  function assignMovement(rows, prevPositions) {
+    for (const row of rows) {
+      const prevPos = prevPositions.get(row.id)
+      row.movement = prevPos != null ? prevPos - row.position : null
+    }
+    return rows
+  }
+
   const adapter = {
     async getBoard() {
       const body = await fetchScoreboard()
@@ -135,6 +169,8 @@ export function createEspnLeaderboardEdition(opts) {
       const prev = peekCached(slug, 'board')
       const prevPositions = new Map((prev?.rows ?? []).map(r => [r.id, r.position]))
 
+      const rows = assignMovement(assignRanking(competitors.map(c => toRow(c, round))), prevPositions)
+
       return {
         kind: 'leaderboard',
         event: {
@@ -146,7 +182,7 @@ export function createEspnLeaderboardEdition(opts) {
           cutLine: null,
           updatedAt: new Date().toISOString(),
         },
-        rows: competitors.map(c => toRow(c, round, prevPositions)),
+        rows,
       }
     },
   }

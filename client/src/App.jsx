@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { useBoard } from './hooks/useBoard'
 import { ConfigProvider } from './hooks/useConfig'
 import LeaderboardBoard from './components/LeaderboardBoard'
@@ -17,6 +17,23 @@ export default function App() {
     return (
       <div className="app">
         <div className="loading">Loading…</div>
+        <Footer />
+      </div>
+    )
+  }
+
+  // config.name only stays empty when /api/:slug/config 404'd — a real
+  // unknown-edition case (typo'd link, stale bookmark), not a transient
+  // fetch error on an edition that does exist.
+  if (!config.name) {
+    return (
+      <div className="app">
+        <div className="loading">
+          <div className="not-found">
+            <p>No edition called &ldquo;{slug}&rdquo;.</p>
+            <Link to="/">&larr; Back to the hub</Link>
+          </div>
+        </div>
         <Footer />
       </div>
     )
