@@ -11,12 +11,26 @@
 // opens bracketUrl in a new tab. So getSource()/getConfig()/getBoard() only
 // ever need to resolve STATIC editions.
 import * as theOpen from './theOpen.js'
+import * as theMasters from './theMasters.js'
+import * as pgaChampionship from './pgaChampionship.js'
+import * as usOpenGolf from './usOpenGolf.js'
 import * as premierLeague from './premierLeague.js'
+import * as laLiga from './laLiga.js'
+import * as serieA from './serieA.js'
+import * as bundesliga from './bundesliga.js'
+import * as ligue1 from './ligue1.js'
 import * as bracketSource from './bracketSource.js'
 
 const staticSources = {
   [theOpen.config.slug]: theOpen,
+  [theMasters.config.slug]: theMasters,
+  [pgaChampionship.config.slug]: pgaChampionship,
+  [usOpenGolf.config.slug]: usOpenGolf,
   [premierLeague.config.slug]: premierLeague,
+  [laLiga.config.slug]: laLiga,
+  [serieA.config.slug]: serieA,
+  [bundesliga.config.slug]: bundesliga,
+  [ligue1.config.slug]: ligue1,
 }
 
 // Sync lookup — only ever finds a static (ESPN) edition. A bracket-backed slug
