@@ -1,0 +1,23 @@
+[Unit]
+Description=live-scores - multi-sport live scores/leaderboards/standings server
+Documentation=https://github.com/elphiene/live-scores
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=el
+WorkingDirectory=/home/el/Documents/El-Projects/live-scores/server
+# Cherry's openresty reverse-proxies scores.cherryslabs.com -> localhost:3002
+Environment=NODE_ENV=production
+Environment=PORT=3002
+Environment=ACTIVE_SOURCE=the-open
+# Absolute node path (nvm-managed). Update if the node version is upgraded.
+ExecStart=/home/el/.nvm/versions/node/v24.12.0/bin/node src/server.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
