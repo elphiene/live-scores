@@ -6,6 +6,7 @@ import { useTimezone } from '../hooks/useTimezone'
 import { formatKickoff } from '../timeFormat'
 import SpoilerToggle from './SpoilerToggle'
 import TimezoneSelect from './TimezoneSelect'
+import SiteSwitcher from './SiteSwitcher'
 import Footer from './Footer'
 import './Hub.css'
 
@@ -93,6 +94,7 @@ export default function Hub() {
       <header className="hub-header">
         <span className="hub-wordmark">LIVE SCORES</span>
         <div className="hub-controls">
+          <SiteSwitcher />
           <SpoilerToggle />
           <TimezoneSelect />
         </div>

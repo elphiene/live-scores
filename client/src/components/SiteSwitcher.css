@@ -1,0 +1,27 @@
+.site-switcher {
+  display: inline-flex;
+  background: #131b26;
+  border-radius: 999px;
+  padding: 2px;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.site-switcher-tab {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b949e;
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+.site-switcher-tab:hover {
+  color: #e6edf3;
+}
+.site-switcher-tab.active {
+  background: var(--accent-primary);
+  color: #0b1119;
+}
+.site-switcher-tab.active:hover {
+  color: #0b1119;
+}

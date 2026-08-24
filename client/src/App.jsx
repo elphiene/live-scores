@@ -7,6 +7,7 @@ import LiveBanner from './components/LiveBanner'
 import SpoilerToggle from './components/SpoilerToggle'
 import TimezoneSelect from './components/TimezoneSelect'
 import HomeLink from './components/HomeLink'
+import SiteSwitcher from './components/SiteSwitcher'
 import Footer from './components/Footer'
 import './App.css'
 
@@ -52,6 +53,7 @@ export default function App() {
           <h1 className="header-title">{config.name}</h1>
           {config.subtitle && <div className="header-sub">{config.subtitle}</div>}
           <div className="header-controls">
+            <SiteSwitcher />
             <SpoilerToggle />
             <TimezoneSelect />
           </div>
