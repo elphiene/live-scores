@@ -7,8 +7,8 @@
   align-items: center;
   gap: 5px;
   background: transparent;
-  border: 1px solid #30363d;
-  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   color: #8b949e;
   font: inherit;
   font-size: 11px;
@@ -47,8 +47,8 @@
   width: 280px;
   max-width: 80vw;
   background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 9px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
   padding: 12px 13px 13px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
@@ -69,8 +69,8 @@
   width: 100%;
   text-align: left;
   background: transparent;
-  border: 1px solid #21262d;
-  border-radius: 7px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
   color: inherit;
   font: inherit;
   padding: 8px 10px;
@@ -130,8 +130,8 @@
   font-weight: 700;
   color: #8b949e;
   background: #0d1117;
-  border: 1px solid #30363d;
-  border-radius: 5px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   padding: 4px 8px;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
@@ -156,8 +156,8 @@
 .spoiler-custom-row input {
   width: 56px;
   background: #0d1117;
-  border: 1px solid #30363d;
-  border-radius: 5px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   color: #e6edf3;
   font: inherit;
   font-size: 11px;

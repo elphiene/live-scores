@@ -1,8 +1,8 @@
 .tz-select {
   max-width: 38vw;
   background: transparent;
-  border: 1px solid #30363d;
-  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   color: #8b949e;
   font: inherit;
   font-size: 11px;

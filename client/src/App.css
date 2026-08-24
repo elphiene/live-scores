@@ -13,7 +13,7 @@
   gap: clamp(8px, 2vw, 12px);
   text-align: center;
   padding: 10px clamp(12px, 3vw, 24px) 8px;
-  border-bottom: 1px solid #131b26;
+  border-bottom: 1px solid var(--hairline-soft);
 }
 
 .header-eyebrow {

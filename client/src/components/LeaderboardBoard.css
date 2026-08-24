@@ -43,13 +43,13 @@
   grid-template-columns: 34px 1fr 70px 60px 60px;
   align-items: center;
   padding: 9px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
 }
 .lb-row:hover { background: #161f2c; }
 
 .lb-leader {
   background: #141c28;
-  border-left: 3px solid var(--accent-primary);
+  border-left: var(--accent-edge) solid var(--accent-primary);
   padding-left: 7px;
 }
 
@@ -115,8 +115,8 @@
   font-weight: 700;
   color: #8b949e;
   background: transparent;
-  border: 1px solid #30363d;
-  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   padding: 6px 14px;
 }
 .lb-more:hover { border-color: #8b949e; color: #e6edf3; }

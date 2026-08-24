@@ -1,5 +1,17 @@
 :root {
   --accent-primary: #f7b731;
+
+  /* Line and corner scale. The hub cards and the round frames already agreed
+     on this language — a 1px hairline, a thin accent edge, one radius — and
+     everything else is being brought into line with it. Kept as tokens so
+     "thinner" is one edit, not thirty. */
+  --hairline: #202c3a;          /* panel and card outlines */
+  --hairline-hover: #33465f;
+  --hairline-soft: #16202c;     /* dividers *inside* a panel, quieter still */
+  --accent-edge: 3px;           /* the coloured edge on a card */
+  --radius-sm: 5px;             /* chips, small controls */
+  --radius-md: 9px;             /* cards, panels */
+  --radius-lg: 14px;            /* the round frames */
 }
 
 *, *::before, *::after {
