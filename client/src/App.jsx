@@ -6,6 +6,7 @@ import StandingsBoard from './components/StandingsBoard'
 import LiveBanner from './components/LiveBanner'
 import SpoilerToggle from './components/SpoilerToggle'
 import TimezoneSelect from './components/TimezoneSelect'
+import HomeLink from './components/HomeLink'
 import Footer from './components/Footer'
 import './App.css'
 
@@ -44,6 +45,9 @@ export default function App() {
       <div className="app">
         <LiveBanner current={slug} />
         <header className="site-header">
+          <div className="header-left">
+            <HomeLink />
+          </div>
           {config.sport && <div className="header-eyebrow">{config.sport.toUpperCase()}</div>}
           <h1 className="header-title">{config.name}</h1>
           {config.subtitle && <div className="header-sub">{config.subtitle}</div>}

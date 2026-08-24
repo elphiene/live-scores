@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="site-footer">
       <span>No ads &middot; no sign-in &middot; no cookie banner</span>
       <span className="footer-sep">·</span>
-      <a href="https://bracket.cherryslabs.com" target="_blank" rel="noopener noreferrer">Brackets</a>
+      <a href="https://bracket.cherryslabs.com">Brackets</a>
       <span className="footer-sep">·</span>
       <span>&copy; {year} Cherry&apos;s Labs</span>
       <span className="footer-sep">·</span>

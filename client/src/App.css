@@ -42,6 +42,19 @@
   text-transform: uppercase;
 }
 
+/* The header is a centred title with a cluster pinned to each side: the home
+   link on the left, spoiler/timezone on the right. Both are taken out of flow
+   so the title centres on the header rather than on what sits beside it. */
+.header-left {
+  position: absolute;
+  left: clamp(10px, 3vw, 20px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .header-controls {
   position: absolute;
   right: clamp(10px, 3vw, 20px);
@@ -52,21 +65,34 @@
   gap: 8px;
 }
 
-@media (max-width: 520px) {
-  .header-eyebrow,
-  .header-sub {
-    display: none;
-  }
+/* Drop both side clusters into their own centred rows instead of letting them
+   float over the title. Absolutely positioned, they take no part in the
+   header's centring, so they start overlapping as soon as the window is
+   narrower than left cluster + title + controls. Kept in step with the
+   bracket site's header so the two siblings break at the same width. */
+@media (max-width: 1100px) {
   .site-header {
     flex-wrap: wrap;
     row-gap: 4px;
   }
+  /* A row each, full width. Sharing one row (order:2 + auto basis) is more
+     compact but wraps wherever the content happens to run out of room — at
+     1000px it lands the home link to the RIGHT of the title, which reads as a
+     mistake. Predictable placement is worth the extra row. */
+  .header-left,
   .header-controls {
     position: static;
     transform: none;
     flex-basis: 100%;
     justify-content: center;
     flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .header-eyebrow,
+  .header-sub {
+    display: none;
   }
 }
 
