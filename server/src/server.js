@@ -47,7 +47,20 @@ app.get('/api/:slug/board', getBoard)
 // Serve built client if dist exists. `index: false` so `/` falls through to the
 // meta-injecting fallback instead of static serving the raw index.html.
 if (existsSync(DIST)) {
-  app.use(express.static(DIST, { index: false }))
+  // Asset files are content-hashed by Vite, so a given URL's bytes never
+  // change — cache them hard. The HTML shell is the opposite: it NAMES those
+  // hashed files, so a cached shell points at assets that a later deploy has
+  // deleted. It must always be revalidated (see the no-store below). Neither
+  // had any cache headers at all before, which left the shell's freshness up
+  // to browser heuristics and re-fetched immutable bundles on every visit.
+  app.use(express.static(DIST, {
+    index: false,
+    setHeaders(res, filePath) {
+      if (/[.-][A-Za-z0-9_-]{8,}\.[a-z0-9]+$/.test(filePath)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
+      }
+    },
+  }))
 
   // index.html is re-read whenever it changes on disk. Caching it for the
   // life of the process turned every client rebuild into a silent outage: a
@@ -88,6 +101,7 @@ if (existsSync(DIST)) {
       return
     }
     const html = indexTemplate().replace(HEAD_META_RE, buildHead(routeMeta(req.path, SITE_ORIGIN)))
+    res.setHeader('Cache-Control', 'no-store, must-revalidate')
     res.type('html').send(html)
   })
 }
