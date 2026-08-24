@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchHub, fetchLiveNow } from '../api'
 import { useSpoiler } from '../hooks/useSpoiler'
@@ -24,6 +24,7 @@ export default function Hub() {
   const [editions, setEditions] = useState([])
   const [live, setLive] = useState([])
   const [loading, setLoading] = useState(true)
+  const [view, setView] = useState('current')
 
   useEffect(() => {
     let cancelled = false
@@ -49,6 +50,16 @@ export default function Hub() {
     poll()
     return () => { cancelled = true; clearTimeout(timer) }
   }, [])
+
+  // Split into "current" (live/upcoming/ongoing — the default view) and "past"
+  // (finished — archived, browsable on demand), mirroring bracket's own Hub.
+  // Standings-kind editions never set `status` (a league table is always
+  // ongoing, never "finished" — see boardStatus.js/shapes/standings.js), so
+  // `status !== 'finished'` naturally keeps them in "current" without any
+  // kind-specific casing here.
+  const currentEditions = useMemo(() => editions.filter(e => e.status !== 'finished'), [editions])
+  const pastEditions = useMemo(() => editions.filter(e => e.status === 'finished'), [editions])
+  const shownEditions = view === 'past' ? pastEditions : currentEditions
 
   function openEdition(e) {
     if (e.kind === 'bracket') window.open(e.bracketUrl, '_blank', 'noopener,noreferrer')
@@ -123,12 +134,34 @@ export default function Hub() {
       )}
 
       <section className="hub-block">
-        <div className="hub-section-label">Editions</div>
+        <div className="hub-tabs">
+          <button
+            className={`hub-tab${view === 'current' ? ' active' : ''}`}
+            onClick={() => setView('current')}
+          >
+            Current {!loading && <span className="hub-tab-count">{currentEditions.length}</span>}
+          </button>
+          <button
+            className={`hub-tab${view === 'past' ? ' active' : ''}`}
+            onClick={() => setView('past')}
+          >
+            Past Events {!loading && <span className="hub-tab-count">{pastEditions.length}</span>}
+          </button>
+        </div>
+
         {loading ? (
           <div className="hub-loading">Loading editions&hellip;</div>
+        ) : shownEditions.length === 0 ? (
+          <div className="hub-empty">
+            {view === 'current' ? (
+              <>Nothing live or upcoming right now. <button className="hub-empty-link" onClick={() => setView('past')}>See past events &rarr;</button></>
+            ) : (
+              'No finished editions yet.'
+            )}
+          </div>
         ) : (
           <div className="hub-grid">
-            {editions.map(e => (
+            {shownEditions.map(e => (
               <button
                 key={`${e.kind}-${e.slug}`}
                 className="hub-card"
