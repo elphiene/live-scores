@@ -3,6 +3,11 @@ Description=live-scores - multi-sport live scores/leaderboards/standings server
 Documentation=https://github.com/elphiene/live-scores
 After=network-online.target
 Wants=network-online.target
+# Never stop retrying. Under the default start-rate limit a handful of quick
+# failures put the unit in `failed` and systemd gives up entirely — which is
+# exactly what happened on 2026-08-24: five EADDRINUSE failures in a row and
+# the service stopped trying while a stale orphan kept answering on the port.
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
@@ -12,6 +17,15 @@ WorkingDirectory=/home/el/Documents/El-Projects/live-scores/server
 Environment=NODE_ENV=production
 Environment=PORT=3002
 Environment=ACTIVE_SOURCE=the-open
+
+# Free the port before starting. A leftover process outside this unit's cgroup
+# — a manual `node src/server.js`, or an orphan from an earlier restart — makes
+# every `systemctl restart` fail with EADDRINUSE while the stale process keeps
+# serving. That is the 2026-08-24 outage: systemctl reported a successful
+# restart, MainPID was 0, and an orphan from 12:53 served a page referencing
+# assets a later build had deleted. The leading `-` ignores "no such process",
+# which is the normal case; running as User=el this can only kill el's own.
+ExecStartPre=-/usr/bin/fuser -k -n tcp 3002
 # Absolute node path (nvm-managed). Update if the node version is upgraded.
 ExecStart=/home/el/.nvm/versions/node/v24.12.0/bin/node src/server.js
 Restart=always
